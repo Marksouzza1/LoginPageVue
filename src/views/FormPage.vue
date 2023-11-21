@@ -7,39 +7,43 @@
         <label >Nome</label>
     </div>
          <div>
-            <InputText type="text" v-model="nome" requered/>
+            <InputText type="text" v-model="nome" />
          </div>
 
          <div class="label">
             <label >Sobrenome</label>
         </div>
              <div>
-                <InputText type="text" v-model="sobrenome" requered/>
+                <InputText type="text" v-model="sobrenome" />
              </div>
 
              <div class="label">
                 <label >Telefone</label>
             </div>
                  <div>
-                    <InputText type="text" v-model="telefone" requered/>
+                    <InputText type="text" v-model="telefone" />
                  </div>
             
                  <div class="label">
                     <label >Email</label>
                 </div>
                      <div>
-                        <InputText type="text" v-model="email" requered/>
+                        <InputText type="text" v-model="email" />
                      </div>
 
                      <div class="label">
                         <label >Senha</label>
                     </div>
                          <div>
-                            <InputText type="password" v-model="senha" requered/>
+                            <InputText type="password" v-model="senha" />
                          </div>     
 
+                         <div v-if="showSuccessMessage">
+                           Dados cadastrados com sucesso!
+                         </div>
+
                  <div>
-                  <button type="submit" id="botao" @click="fazerCadastro()">Cadastrar</button>
+                  <button type="submit" id="botao" @click.prevent="fazerCadastro()">Cadastrar</button>
                </div> 
                <div>
                   <RouterLink to="/">voltar</RouterLink>
@@ -57,7 +61,8 @@ import InputText from '@/components/InputText.vue';
     name: 'FormPage',
     data(){
 
-      return{
+      return{ 
+         showSuccessMessage: false,
          nome:"",
          sobrenome: "",
          telefone: "",
@@ -78,6 +83,10 @@ import InputText from '@/components/InputText.vue';
           telefone: this.telefone,
           senha: this.senha,
         });
+        this.showSuccessMessage = true;
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
         console.log('Cadastro realizado:', response.data);
        
       } catch (error) {

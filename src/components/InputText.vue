@@ -1,11 +1,16 @@
 <template>
     
-    <input class="textInput" type="text" placeholder="" autocomplete="off">
+    <input class="textInput"  v-model="valor"  autocomplete="off"  required>
 </template>
 
 <script>
 export default{ 
-    name:'inputText'
+    name:'inputText',
+    data(){
+        return{
+            valor:''
+        }
+    }
 }
 </script>
 
