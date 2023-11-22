@@ -20,6 +20,18 @@
       "telefone": "123",
       "senha": "123",
       "id": 3
+    },
+    {
+      "nome": "rafaela",
+      "email": "rafaela@email.com",
+      "telefone": "123",
+      "senha": "123",
+      "id": 4
+    },
+    {
+      "email": "marco@email.com",
+      "senha": "123",
+      "id": 5
     }
   ]
 }

@@ -1,39 +1,48 @@
 <template>
 
-    <div class="loginBox">
+    <form class="loginBox">
+        
         <div><h1>Login</h1>
-            
+         
         </div>
         <div>
             <label for="email">Email</label>
         </div>
         <div>
-            <InputText v-model="email"/>
+            <InputText type="text" v-model="email" autocomplete="off"/>
         </div>
 
         <div>
-            <label for="">Senha</label>
+            <label for="senha">Senha</label>
         </div> 
         <div>
-            <InputText/>
+            <InputText type="password" v-model="senha"/>
         </div>
         
         <div>
-            <button class="botao">logar</button>
+            <button class="botao" @click.prevent="fazerLogin()">logar</button>
         </div>
            
         <div>
             <router-link to="formPage"><button type="submit" class="botao">Cadastro</button></router-link>          
         </div>
 
-
+        <div v-if="showSucessLogin">
+            voce esta logado
         </div>
+
+        <div v-if="showInvalidUser">
+            Dados invalidos!
+        </div>
+    
+    </form>
 
 
 
 </template>
 
 <script>
+import axios from 'axios';
 import InputText from '@/components/InputText.vue';
 
 
@@ -42,12 +51,34 @@ import InputText from '@/components/InputText.vue';
 
     data() {
         return{
-            email:''
+            showSucessLogin:false,
+            showInvalidUser:false,
+            email:'',
+            senha:''
         }
     },
     components: { InputText, 
     
     
+    },
+    methods:{
+
+        async fazerLogin() {
+      try {
+       
+        const response = await axios.post('http://localhost:3000/usuarios', {
+          email: this.email,
+          senha: this.senha,
+        });
+
+       this.showSucessLogin = true
+        console.log('Login bem-sucedido:', response.data);
+      } catch (error) {
+        this.showInvalidUser=true
+        console.error('Erro no login:', error);
+      }
+    },
+
     }
 }
 </script>

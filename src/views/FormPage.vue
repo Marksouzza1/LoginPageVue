@@ -7,37 +7,39 @@
         <label >Nome</label>
     </div>
          <div>
-            <InputText type="text" v-model="nome" />
+            <InputText type="text" v-model="nome" autocomplete="off" />
          </div>
 
          <div class="label">
             <label >Sobrenome</label>
         </div>
              <div>
-                <InputText type="text" v-model="sobrenome" />
+                <InputText type="text" v-model="sobrenome" autocomplete="off" />
              </div>
 
              <div class="label">
                 <label >Telefone</label>
             </div>
                  <div>
-                    <InputText type="text" v-model="telefone" />
+                    <InputText type="text" v-model="telefone" autocomplete="off" />
                  </div>
             
                  <div class="label">
                     <label >Email</label>
                 </div>
                      <div>
-                        <InputText type="text" v-model="email" />
+                        <InputText type="text" v-model="email" autocomplete="off" />
                      </div>
 
                      <div class="label">
                         <label >Senha</label>
                     </div>
                          <div>
-                            <InputText type="password" v-model="senha" />
+                            <InputText type="password" v-model="senha" autocomplete="off" />
                          </div>     
-
+                         <div v-if="showInvalidEmail">
+                           Email existente !
+                         </div>
                          <div v-if="showSuccessMessage">
                            Dados cadastrados com sucesso!
                          </div>
@@ -62,6 +64,7 @@ import InputText from '@/components/InputText.vue';
     data(){
 
       return{ 
+         showInvalidEmail:false,
          showSuccessMessage: false,
          nome:"",
          sobrenome: "",
@@ -73,29 +76,51 @@ import InputText from '@/components/InputText.vue';
     },
     components: { InputText },
     methods:{
+
       async fazerCadastro() {
-
- 
-      try {
-        const response = await axios.post('http://localhost:3000/usuarios', {
-          nome: this.nome,
-          email: this.email,
-          telefone: this.telefone,
-          senha: this.senha,
-        });
-        this.showSuccessMessage = true;
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-        console.log('Cadastro realizado:', response.data);
-       
-      } catch (error) {
-        console.error('Erro ao cadastrar:', error);
-      }
-
+  try {
     
+    const emailExistente = await this.verificarEmailExistente();
+
+    if (emailExistente) {
+      this.showInvalidEmail=true;
+      console.error('E-mail já cadastrado. Escolha outro e-mail.');
+      return;
     }
-   }
+
+   
+    const response = await axios.post('http://localhost:3000/usuarios', {
+      nome: this.nome,
+      email: this.email,
+      telefone: this.telefone,
+      senha: this.senha,
+    });
+
+    this.showSuccessMessage = true;
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+    console.log('Cadastro realizado:', response.data);
+  } catch (error) {
+    console.error('Erro ao cadastrar:', error);
+  }
+},
+
+async verificarEmailExistente() {
+  try {
+   
+    const response = await axios.get(`http://localhost:3000/usuarios?email=${this.email}`);
+    
+    
+    return response.data.length > 0;
+  } catch (error) {
+    console.error('Erro ao verificar e-mail existente:', error);
+    return false;
+  }
+}
+
+
+    }
 }
 </script>
 
